@@ -11,8 +11,10 @@
   "posting_date",
   "column_break_2",
   "stock_entry_type",
+  "posting_time",
   "section_break_4",
   "default_source_warehouse",
+  "column_break_8",
   "default_target_warehouse",
   "section_break_7",
   "amended_from",
@@ -79,12 +81,22 @@
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
+  },
+  {
+   "default": "now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-22 12:59:00.563401",
+ "modified": "2022-02-23 20:15:45.232870",
  "modified_by": "Administrator",
  "module": "Stock Management",
  "name": "Stock Entry",
@@ -105,5 +117,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "stock_entry_type",
  "track_changes": 1
 }
