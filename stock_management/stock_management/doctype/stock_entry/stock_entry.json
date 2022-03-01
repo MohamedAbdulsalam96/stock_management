@@ -7,7 +7,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "title",
   "posting_date",
   "column_break_2",
   "stock_entry_type",
@@ -21,13 +20,6 @@
   "items"
  ],
  "fields": [
-  {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Title",
-   "reqd": 1
-  },
   {
    "fieldname": "stock_entry_type",
    "fieldtype": "Select",
@@ -86,7 +78,8 @@
    "default": "now",
    "fieldname": "posting_time",
    "fieldtype": "Time",
-   "label": "Posting Time"
+   "label": "Posting Time",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_8",
@@ -96,7 +89,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-23 20:15:45.232870",
+ "modified": "2022-02-25 14:50:08.282843",
  "modified_by": "Administrator",
  "module": "Stock Management",
  "name": "Stock Entry",
