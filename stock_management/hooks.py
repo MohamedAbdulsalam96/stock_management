@@ -59,6 +59,8 @@ app_license = "MIT"
 # before_install = "stock_management.install.before_install"
 # after_install = "stock_management.install.after_install"
 
+after_install = "stock_management.add_warehouse.create_default_warehouse"
+
 # Uninstallation
 # ------------
 
