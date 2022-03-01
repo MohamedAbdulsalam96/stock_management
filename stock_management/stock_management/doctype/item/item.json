@@ -17,7 +17,9 @@
   "opening_stock",
   "image",
   "route",
-  "valuation_method"
+  "valuation_method",
+  "valuation_rate",
+  "maintain_stock"
  ],
  "fields": [
   {
@@ -49,7 +51,8 @@
    "fieldname": "default_warehouse",
    "fieldtype": "Link",
    "label": "Default Warehouse",
-   "options": "Warehouse"
+   "options": "Warehouse",
+   "reqd": 1
   },
   {
    "fieldname": "default_uom",
@@ -57,10 +60,13 @@
    "label": "Default UOM"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "opening_stock",
    "fieldtype": "Float",
    "label": "Opening Stock",
-   "non_negative": 1
+   "mandatory_depends_on": "eval:doc.maintain_stock == 1;",
+   "non_negative": 1,
+   "set_only_once": 1
   },
   {
    "fieldname": "image",
@@ -74,6 +80,7 @@
    "label": "Route"
   },
   {
+   "default": "Moving Average",
    "fieldname": "valuation_method",
    "fieldtype": "Select",
    "label": "Valuation Method",
@@ -82,13 +89,28 @@
   {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "valuation_rate",
+   "fieldtype": "Currency",
+   "label": "Valuation Rate",
+   "mandatory_depends_on": "eval:doc.maintain_stock == 1;",
+   "set_only_once": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "1",
+   "fieldname": "maintain_stock",
+   "fieldtype": "Check",
+   "label": "Maintain Stock"
   }
  ],
  "has_web_view": 1,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-22 12:02:40.044873",
+ "modified": "2022-02-28 17:14:10.062293",
  "modified_by": "Administrator",
  "module": "Stock Management",
  "name": "Item",
