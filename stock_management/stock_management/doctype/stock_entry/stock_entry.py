@@ -22,7 +22,7 @@ class StockEntry(Document):
 		if entry_type == "Material Receipt":
 			if not item.target_warehouse:
 				frappe.throw(_(f"Target Warehouse mandatory for {entry_type}"))
-			item.target_warehouse = None
+			item.source_warehouse = None
 
 	def last_doc_values(self, item, warehouse):
 
@@ -50,20 +50,22 @@ class StockEntry(Document):
 		stock_ledger.posting_time = now()
 		stock_ledger.voucher_type = "Stock Entry"
 		stock_ledger.voucher_no = self.name
-		
+
 		if warehouse_type == "Source":
 			stock_ledger.incoming_rate = -(item.rate)
+			stock_ledger.actual_qty = -(item.quantity)
+			stock_ledger.amount = -(item.amount)
 		elif warehouse_type == "Target":
+			stock_ledger.amount = item.amount
 			stock_ledger.actual_qty = item.quantity
+			stock_ledger.incoming_rate = item.rate
 
-		stock_ledger.incoming_rate = item.rate
-		stock_ledger.amount = stock_ledger.incoming_rate * stock_ledger.actual_qty
 		stock_ledger.insert()
 		stock_ledger.submit()
 
 		# qty, value = self.last_doc_values(item, warehouse)
 
-	def submit(self):
+	def on_submit(self):
 
 		for item in self.items:
 
@@ -75,9 +77,9 @@ class StockEntry(Document):
 				self.create_stock_ledger(item, warehouse = item.source_warehouse, warehouse_type = "Source")
 
 			elif item.target_warehouse:
-				self.create_stock_ledger(item, warehouse = item.source_warehouse, warehouse_type = "Target")
+				self.create_stock_ledger(item, warehouse = item.target_warehouse, warehouse_type = "Target")
 				
 	def validate(self):
-
+		
 		for item in self.items:
 			self.warehouse_validation(self.stock_entry_type, item)
