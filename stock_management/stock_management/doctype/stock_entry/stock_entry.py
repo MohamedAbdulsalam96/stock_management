@@ -11,13 +11,12 @@ def check_quantity(item):
 	if item.source_warehouse:
 		sle = frappe.qb.DocType('Stock Ledger Entry')
 		sum_total = Sum(sle.actual_qty).as_("total_qty")
-
+		
 		result = (
 			frappe.qb.from_(sle)
 			.select(sum_total)
-			.where(sle.warehouse == "All Warehouse")
+			.where(sle.warehouse == item.source_warehouse)
 			).run()
-
 		stock_balance = result[0][0]
 		if stock_balance < item.quantity:
 			frappe.throw(_(f"Not enough stock balance in {item.source_warehouse}"))
@@ -95,8 +94,7 @@ class StockEntry(Document):
 			elif item.target_warehouse:
 				self.create_stock_ledger(item, warehouse = item.target_warehouse, warehouse_type = "Target")
 				
-	def validate(self):
-		
+	def validate(self):		
 		for item in self.items:
 			self.warehouse_validation(self.stock_entry_type, item)
 			check_quantity(item)
