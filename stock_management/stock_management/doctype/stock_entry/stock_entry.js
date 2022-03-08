@@ -20,22 +20,23 @@ frappe.ui.form.on("Stock Entry Item", "item_code", function(frm, cdt, cdn)
     {
         frappe.db.get_list('Stock Ledger Entry', 
         {
-            fields:['incoming_rate', 'actual_qty'], filters:{item_code: row.item_code}
+            fields:['incoming_rate', 'actual_qty', 'warehouse', 'item_code', 'amount'],
+            filters:{item_code: row.item_code, warehouse: row.source_warehouse}
         }).then(
             records => {
-            let rate = 0;
+            let amount = 0;
             let qty = 0;
             let total_qty = 0;
             let total_amount = 0;
             function calculate_sum(){
+                console.log(records)
                 for(var i = 0; i < records.length; i++){
-                    rate = records[i]['incoming_rate'];
+                    amount = records[i]['amount'];
                     qty = records[i]['actual_qty']
                     total_qty += qty
-                    total_amount += rate * qty; 
+                    total_amount += amount;
                 }
                 let valuation_rate = total_amount / total_qty
-                console.log(valuation_rate)
                 frappe.model.set_value(cdt, cdn, "rate", valuation_rate);
             };
             calculate_sum()
