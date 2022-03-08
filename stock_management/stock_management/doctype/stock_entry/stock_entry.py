@@ -5,6 +5,22 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import today, now
+from frappe.query_builder.functions import Sum
+
+def check_quantity(item):
+	if item.source_warehouse:
+		sle = frappe.qb.DocType('Stock Ledger Entry')
+		sum_total = Sum(sle.actual_qty).as_("total_qty")
+
+		result = (
+			frappe.qb.from_(sle)
+			.select(sum_total)
+			.where(sle.warehouse == "All Warehouse")
+			).run()
+
+		stock_balance = result[0][0]
+		if stock_balance < item.quantity:
+			frappe.throw(_(f"Not enough stock balance in {item.source_warehouse}"))
 
 class StockEntry(Document):
 
@@ -83,3 +99,5 @@ class StockEntry(Document):
 		
 		for item in self.items:
 			self.warehouse_validation(self.stock_entry_type, item)
+			check_quantity(item)
+		
