@@ -64,7 +64,7 @@ def get_data(filters):
 		GROUP BY
 			item_code, warehouse
 		""" %(conditions), filters, as_dict=True)
-
+	
 	return data
 
 def get_conditions(filters):
