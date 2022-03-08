@@ -33,8 +33,9 @@ def get_columns():
 		},
 		{
 			'fieldname': 'valuation_rate',
-			'label': _('Rate'),
-			'width': 150
+			'label': _('Valuation Rate'),
+			'fieldtype': 'Float',
+			'width': 120
 		},
 		{
 			'fieldname': 'posting_date',
@@ -43,14 +44,6 @@ def get_columns():
 		{
 			'fieldname': 'posting_time',
 			'label': _('Posting Time'),
-			'width': 180
-		},
-		{
-			'fieldname': 'name',
-			'label': _('Voucher Id'),
-			'fieldtype': 'Link',
-			'options': 'Stock Ledger Entry',
-			'width': 160
 		},
 	]
 
@@ -63,7 +56,7 @@ def get_data(filters):
 
 	data = frappe.db.sql("""
 		SELECT DISTINCT
-			sum(amount) / sum(actual_qty) as valuation_rate, sum(actual_qty) as stock_balance, item_code, warehouse, posting_date, posting_time, name
+			sum(amount) / sum(actual_qty) as valuation_rate, sum(actual_qty) as stock_balance, item_code, warehouse, posting_date, posting_time
 		FROM
 			`tabStock Ledger Entry` as sle
 		WHERE
