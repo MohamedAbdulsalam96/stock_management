@@ -11,6 +11,11 @@ class Item(WebsiteGenerator):
 	def validate(self):
 		if self.maintain_stock == 1 and self.opening_stock == 0:
 			frappe.throw(_("Opening Stock is required for stock item."))
+		if self.maintain_stock == 1 and self.valuation_rate == 0:
+			frappe.throw(_("Valuation Rate is required for stock item."))
+
+		if not self.item_name:
+			self.item_name = self.item_code
 
 	def create_stock_entry(self):
 		stock = frappe.new_doc('Stock Entry')
@@ -21,12 +26,12 @@ class Item(WebsiteGenerator):
 		stock.append('items', {
 			'item_code': self.item_code,
 			'target_warehouse': self.default_warehouse,
-			'quantity': self.opening_stocks,
+			'quantity': self.opening_stock,
 			'rate': self.valuation_rate,
-			'amount': quantity * rate
+			'amount': self.opening_stock * self.valuation_rate
 			})
+		stock.docstatus = 1
 		stock.insert()
-		stock.submit()
 
 	def after_insert(self):
 		if self.maintain_stock == 1:
