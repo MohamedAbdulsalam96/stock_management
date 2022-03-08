@@ -44,10 +44,12 @@
   },
   {
    "fieldname": "item_group",
-   "fieldtype": "Data",
-   "label": "Item Group"
+   "fieldtype": "Select",
+   "label": "Item Group",
+   "options": "All Item Group\nConsumable\nProduct"
   },
   {
+   "default": "All Warehouse",
    "fieldname": "default_warehouse",
    "fieldtype": "Link",
    "label": "Default Warehouse",
@@ -77,6 +79,7 @@
   {
    "fieldname": "route",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Route"
   },
   {
@@ -110,7 +113,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-28 17:14:10.062293",
+ "modified": "2022-03-07 14:45:07.487755",
  "modified_by": "Administrator",
  "module": "Stock Management",
  "name": "Item",
