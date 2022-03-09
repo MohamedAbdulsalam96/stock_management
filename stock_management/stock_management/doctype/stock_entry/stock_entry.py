@@ -39,23 +39,6 @@ class StockEntry(Document):
 				frappe.throw(_(f"Target Warehouse mandatory for {entry_type}"))
 			item.source_warehouse = None
 
-	def last_doc_values(self, item, warehouse):
-
-		try:
-			last_doc = frappe.get_last_doc('Stock Ledger Entry', 
-				filters={'item_code': item.item_code, 'warehouse': warehouse})
-		except:
-			last_quantity = 0
-			last_value = 0
-		else:
-			last_quantity = last_doc.qty_after_transaction
-			last_value = last_doc.stock_value
-		
-		
-		return last_quantity + item.quantity
-			# stock_value = last_doc.stock_value + valuation_rate()
-			# return quantity, stock_value
-
 	def create_stock_ledger(self, item, warehouse, warehouse_type):
 
 		stock_ledger = frappe.new_doc('Stock Ledger Entry')
@@ -77,8 +60,6 @@ class StockEntry(Document):
 
 		stock_ledger.insert()
 		stock_ledger.submit()
-
-		# qty, value = self.last_doc_values(item, warehouse)
 
 	def on_submit(self):
 
