@@ -31,12 +31,14 @@
   {
    "fieldname": "default_source_warehouse",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Default Source Warehouse",
    "options": "Warehouse"
   },
   {
    "fieldname": "default_target_warehouse",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Default Target Warehouse",
    "options": "Warehouse"
   },
@@ -89,7 +91,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-25 14:50:08.282843",
+ "modified": "2022-03-09 11:51:02.508400",
  "modified_by": "Administrator",
  "module": "Stock Management",
  "name": "Stock Entry",

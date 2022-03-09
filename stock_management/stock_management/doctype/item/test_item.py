@@ -30,11 +30,10 @@ class TestItem(unittest.TestCase):
 	def test_stock_entry_creation(self):
 		item = create_item("Iron")
 		stock_entries = frappe.db.get_list('Stock Entry', {'stock_entry_type': 'Material Receipt'})
+		
 		for d in stock_entries:
-			stock_entry = frappe.get_doc('Stock Entry', d)
-			stock_entry_items = stock_entry.items
-			for m in stock_entry_items:
-				if m.item_code == item.item_code:
-					return
-				
-				frappe.throw("Stock entry not created")
+			child_entry = frappe.db.get_list('Stock Entry Item', {'parent': d.name}, ['item_code'])
+			if child_entry[0].item_code == 'Iron':
+				return
+
+		frappe.throw("Stock Entry not created")
