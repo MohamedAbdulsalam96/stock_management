@@ -18,8 +18,7 @@
   "image",
   "route",
   "valuation_method",
-  "valuation_rate",
-  "maintain_stock"
+  "valuation_rate"
  ],
  "fields": [
   {
@@ -64,9 +63,8 @@
   {
    "allow_in_quick_entry": 1,
    "fieldname": "opening_stock",
-   "fieldtype": "Float",
+   "fieldtype": "Int",
    "label": "Opening Stock",
-   "mandatory_depends_on": "eval:doc.maintain_stock == 1;",
    "non_negative": 1,
    "set_only_once": 1
   },
@@ -98,22 +96,15 @@
    "fieldname": "valuation_rate",
    "fieldtype": "Currency",
    "label": "Valuation Rate",
-   "mandatory_depends_on": "eval:doc.maintain_stock == 1;",
+   "mandatory_depends_on": "eval:doc.opening_stock != null;",
    "set_only_once": 1
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "default": "1",
-   "fieldname": "maintain_stock",
-   "fieldtype": "Check",
-   "label": "Maintain Stock"
   }
  ],
  "has_web_view": 1,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-07 14:45:07.487755",
+ "modified": "2022-03-11 15:09:34.961336",
  "modified_by": "Administrator",
  "module": "Stock Management",
  "name": "Item",
