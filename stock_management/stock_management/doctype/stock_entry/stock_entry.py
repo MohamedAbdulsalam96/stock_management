@@ -80,3 +80,8 @@ class StockEntry(Document):
 			self.warehouse_validation(self.stock_entry_type, item)
 			check_quantity(item)
 		
+		self.calculate_total()
+	
+	def calculate_total(self):
+		for d in self.items:
+			d.amount = d.quantity * d.rate
