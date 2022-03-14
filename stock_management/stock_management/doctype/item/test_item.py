@@ -4,7 +4,7 @@
 import frappe
 import unittest
 
-def create_item(item_code):
+def create_item(item_code, warehouse, opening_stock=None, valuation_rate=None):
 	if frappe.db.exists('Item', item_code):
 		return frappe.get_doc('Item', item_code)
 
@@ -13,27 +13,19 @@ def create_item(item_code):
 		'item_code': item_code,
 		'item_name': item_code,
 		'maintain_stock': 1,
-		'default_warehouse': 'All Warehouse',
-		'opening_stock': 100,
-		'valuation_rate': 200
+		'default_warehouse': warehouse,
+		'opening_stock': opening_stock,
+		'valuation_rate': valuation_rate
 	}).insert()
 
 	return item
 
-class TestItem(unittest.TestCase):
-	def setUp(self):
-		pass
-	
+class TestItem(unittest.TestCase):	
 	def tearDown(self):
 		frappe.db.rollback()
 
 	def test_stock_entry_creation(self):
-		item = create_item("Iron")
-		stock_entries = frappe.db.get_list('Stock Entry', {'stock_entry_type': 'Material Receipt'})
+		item = create_item("Iron", warehouse='Stores', opening_stock=100, valuation_rate=200)
+		stock_entry = frappe.get_last_doc('Stock Entry Item', filters={'item_code': item.item_code})
 		
-		for d in stock_entries:
-			child_entry = frappe.db.get_list('Stock Entry Item', {'parent': d.name}, ['item_code'])
-			if child_entry[0].item_code == 'Iron':
-				return
-
-		frappe.throw("Stock Entry not created")
+		self.assertEqual(stock_entry.item_code, item.item_code)
