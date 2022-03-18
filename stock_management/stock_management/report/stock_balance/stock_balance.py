@@ -46,16 +46,13 @@ def get_columns():
 			'label': _('Posting Time'),
 		},
 	]
-
-	# warehouses = frappe.qb.from_('Warehouse').select('name').run()
-	# data = frappe.db.sql("""SELECT  DISTINCT warehouse, name, item_code, posting_date from `tabStock Ledger Entry`;""", as_dict=True)
-
+	
 def get_data(filters):
 
 	conditions = get_conditions(filters)
 
 	data = frappe.db.sql("""
-		SELECT DISTINCT
+		SELECT
 			sum(amount) / sum(actual_qty) as valuation_rate, sum(actual_qty) as stock_balance, item_code, warehouse, posting_date, posting_time
 		FROM
 			`tabStock Ledger Entry` as sle
