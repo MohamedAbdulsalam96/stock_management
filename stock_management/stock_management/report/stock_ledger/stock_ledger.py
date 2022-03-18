@@ -18,6 +18,10 @@ def get_columns():
 			'label': _('Posting Date')
 		},
 		{
+			'fieldname': 'posting_time',
+			'label': _('Posting Time')
+		},
+		{
 			'fieldname': 'item_code',
 			'label': _('Item'),
 			'fieldtype': 'Link',
@@ -79,12 +83,12 @@ def get_columns():
 	]
 	
 def get_data(filters):
-
+	
 	conditions = get_conditions(filters)
-
+	
 	results = frappe.db.sql("""
 		SELECT
-			item_code, warehouse, actual_qty, incoming_rate, amount, voucher_type, voucher_no, posting_date
+			item_code, warehouse, actual_qty, incoming_rate, amount, voucher_type, voucher_no, posting_date, posting_time
 		FROM
 			`tabStock Ledger Entry` as sle
 		WHERE
