@@ -3,7 +3,6 @@
 
 frappe.ui.form.on("Stock Entry Item", "item_code", function(frm, cdt, cdn)
 {
-    // console.log("Hello eMan")
     var row = locals[cdt][cdn]
     if (row.source_warehouse)
     {
@@ -20,7 +19,6 @@ frappe.ui.form.on("Stock Entry Item", "item_code", function(frm, cdt, cdn)
                     records: e
                 },
                 callback: function(r){
-                    // console.log(r.message)
                     frappe.model.set_value(cdt, cdn, "rate", r.message);
                 }
             })

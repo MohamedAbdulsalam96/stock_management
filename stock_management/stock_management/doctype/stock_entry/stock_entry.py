@@ -52,7 +52,7 @@ class StockEntry(Document):
 
 		if warehouse_type == 'Source':
 			stock_ledger.entry_type = 'Source'
-			stock_ledger.actual_qty = item.quantity
+			stock_ledger.actual_qty = -(item.quantity)
 		elif warehouse_type == 'Target':
 			stock_ledger.entry_type == 'Target'
 			stock_ledger.actual_qty = item.quantity
@@ -75,17 +75,12 @@ class StockEntry(Document):
 			if self.stock_entry_type != 'Material Receipt':
 				check_quantity(item)
 
-			records = get_records(item.item_code, item.source_warehouse)
-			valuation_rate = get_valuation_rate(records)
-			item.rate = valuation_rate
+				records = get_records(item.item_code, item.source_warehouse)
+				valuation_rate = get_valuation_rate(records)
+				item.rate = valuation_rate
 
 		self.warehouse_validation(self.stock_entry_type, item)
-		self.calculate_total()
 
-	def calculate_total(self):
-		for d in self.items:
-			d.amount = d.quantity * d.rate
-		
 	def on_cancel(self):
 		sle_entries = frappe.db.get_list('Stock Ledger Entry', filters = {'voucher_type': 'Stock Entry', 'voucher_no': self.name})
 		for d in sle_entries:

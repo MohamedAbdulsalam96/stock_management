@@ -9,8 +9,6 @@ def get_valuation_rate(records):
         total_qty = 0
         total_amount = 0
 
-        print(records[0])
-
         for record in records:
             total_qty += record['actual_qty']
             total_amount += record['amount']

@@ -73,3 +73,14 @@ def get_conditions(filters):
 		conditions += "and sle.warehouse = %s" % frappe.db.escape(filters.get("warehouse"), percent=False)
 	
 	return conditions
+
+
+def get_stock_balance(item, warehouse):
+	from stock_management.stock_management.doctype.stock_entry.calculate_valuation_rate import get_records
+
+	stock_balance = 0
+	records = get_records(item, warehouse)
+	for record in records:
+		stock_balance += record.actual_qty
+	
+	return stock_balance

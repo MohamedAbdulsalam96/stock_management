@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-from frappe.utils import today, now
+from frappe.utils import today, nowtime
 from frappe import _
 
 class Item(WebsiteGenerator):
@@ -16,14 +16,13 @@ class Item(WebsiteGenerator):
 		stock = frappe.new_doc('Stock Entry')
 		stock.title = 'Material Receipt'
 		stock.posting_date = today()
-		stock.posting_time = now()
+		stock.posting_time = nowtime()
 		stock.stock_entry_type = 'Material Receipt'
 		stock.append('items', {
 			'item_code': self.item_code,
 			'target_warehouse': self.default_warehouse,
 			'quantity': self.opening_stock,
-			'rate': self.valuation_rate,
-			'amount': self.opening_stock * self.valuation_rate
+			'rate': self.valuation_rate
 			})
 		stock.insert()
 		stock.submit()
