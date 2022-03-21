@@ -34,6 +34,7 @@ def get_columns():
 			'label': _('Warehouse'),
 			'fieldtype': 'Link',
 			'options': 'Warehouse',
+			'width': 120
 		},
 		{
 			'fieldname': 'actual_qty',
@@ -44,7 +45,7 @@ def get_columns():
 			'fieldname': 'updated_qty',
 			'label': _('Quantity after transaction'),
 			'fieldtype': 'Float',
-			'width': 110
+			'width': 130
 		},
 		{
 			'fieldname': 'incoming_rate',
@@ -63,7 +64,7 @@ def get_columns():
 			'width': 110
 		},
 		{
-			'fieldname': 'stock_value_difference',
+			'fieldname': 'stock_value_after_transaction',
 			'label': _('Stock Value Difference'),
 			'fieldtype': 'Currency',
 			'width': 110
@@ -86,8 +87,8 @@ def get_columns():
 def get_data(filters):
 	all_filters = [['docstatus', '=', 1]]
 	orm_filters = get_conditions(filters, all_filters)
-
-	records = frappe.db.get_list('Stock Ledger Entry', filters=orm_filters, order_by='posting_time desc',
+	
+	records = frappe.db.get_list('Stock Ledger Entry', filters=orm_filters, order_by='posting_time asc',
 		fields=['item_code', 'warehouse', 'posting_date', 'posting_time', 'actual_qty', 'incoming_rate', 'amount', 'voucher_type', 'voucher_no'])
 	
 	data = process_data(records)
@@ -100,7 +101,7 @@ def get_conditions(filters, all_filters):
 		all_filters.append(['item_code', '=', filters.get('item_code')])
 		
 	if filters.get("warehouse"):
-		all_filters.append(['item_code', '=', filters.get('warehouse')])
+		all_filters.append(['warehouse', '=', filters.get('warehouse')])
 	
 	return all_filters
 
@@ -112,23 +113,21 @@ def process_data(records):
 		
 		if combination in processed_data:
 			comb_values = processed_data[combination]
-			# print(processed_data)
-			sle_entries = get_records(combination[0], combination[1])
+			
+			# sle_entries = get_records(combination[0], combination[1], add_filters = "{'posting_time': comb_values[-1]['posting_time'] < record['posting_time']}")
+			sle_entries = frappe.db.get_list('Stock Ledger Entry', filters={'posting_time':['<=', record['posting_time']], 'item_code': combination[0], 'warehouse': combination[1]}, fields=['*'])
 			valuation_rate = get_valuation_rate(sle_entries)
 
 			record['valuation_rate'] = round(valuation_rate, 2)
 			record['stock_value'] = comb_values[-1]['amount']
-			record['stock_value_difference'] = comb_values[-1]['amount'] - record['amount']
-			record['updated_qty'] = comb_values[-1]['actual_qty'] + record['actual_qty']
+			record['stock_value_after_transaction'] = comb_values[-1]['stock_value_after_transaction'] + record['amount']
+			record['updated_qty'] = comb_values[-1]['updated_qty'] + record['actual_qty']
 				
 			processed_data[combination].append(record)
 			rows.append(record)
 		else:
 			processed_data[combination] = [record]
-			processed_data[combination][-1].update({'stock_value_difference': record['amount'], 'updated_qty': record['actual_qty'], 'valuation_rate': record['incoming_rate']})
+			processed_data[combination][-1].update({'stock_value_after_transaction': record['amount'], 'updated_qty': record['actual_qty'], 'valuation_rate': record['incoming_rate']})
 			rows.append(record)
-		
-	print(processed_data)
 
 	return rows
-

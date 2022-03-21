@@ -111,10 +111,13 @@ def get_conditions(filters):
 
 def ex_execute(results):
 	data = []
+	print("\n\nResults and data")
+	print(results, data)
     # adding the first record unconditionally
 	first = results[0]
 	append_data(data, first, first['actual_qty'], first['incoming_rate'], first['amount'])
-
+	print("\n\ndata after appending\n")
+	print(data)
 	for result in results[1:]:
 		check_value(result, data)
 	return data
@@ -138,7 +141,10 @@ def update_value(result, d, updated_qty, valuation_rate, stock_value_difference)
 	return updated_qty, valuation_rate, stock_value_difference
 
 def calculate_valuation_rate(result, d):
-	rate = (d['stock_value'] + result['amount']) / (d['qty'] + result['actual_qty'])
+	total_sum = d['stock_value'] + result['amount']
+	total_quantity =  d['qty'] + result['actual_qty']
+	print(total_sum, total_quantity)
+	rate = total_sum / total_quantity
 	rate = round(rate, 2)
 	return rate
 
@@ -148,3 +154,4 @@ def append_data(data, result, updated_qty, valuation_rate, stock_value_differenc
 		'valuation_rate': valuation_rate, 'stock_value': result['amount'], 
 		'stock_value_difference': stock_value_difference, 'posting_date': result['posting_date'],
 		'voucher_type': result['voucher_type'], 'voucher_no': result['voucher_no']})
+	

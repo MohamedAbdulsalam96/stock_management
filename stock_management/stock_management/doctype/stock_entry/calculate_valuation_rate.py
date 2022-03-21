@@ -16,6 +16,6 @@ def get_valuation_rate(records):
         valuation_rate = total_amount / total_qty
         return valuation_rate
 
-def get_records(item, warehouse):
+def get_records(item, warehouse, add_filters=None):
     records = frappe.db.get_list('Stock Ledger Entry', filters={'item_code': item, 'warehouse': warehouse}, fields=['*'])
     return records

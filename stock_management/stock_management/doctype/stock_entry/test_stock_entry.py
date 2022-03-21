@@ -35,11 +35,15 @@ def create_stock_entry(item, entry_type, rate, quantity, source_warehouse=None, 
 	return se
 
 class TestStockEntry(unittest.TestCase):
-	def tearDown(self):
-		frappe.db.rollback()
+	# def tearDown(self):
+	# 	frappe.db.rollback()
 	
 	def test_receipt_posting(self):
-		item = frappe.get_last_doc('Item')
+		try:
+			item = frappe.get_last_doc('Item')
+		except:
+			item = frappe.get_doc({'doctype': 'Item', 'item_code': 'Rod'})
+			item.insert()
 		warehouse = 'Stores'
 		stock = 25
 		difference, doc = get_stock_difference(item, 'Material Receipt', stock, warehouse)
@@ -49,8 +53,12 @@ class TestStockEntry(unittest.TestCase):
 		self.assertTrue(sle)
 
 	def test_issue_posting(self):
-		item = frappe.get_last_doc('Item')
-		warehouse = 'Finished Goods'
+		try:
+			item = frappe.get_last_doc('Item')
+		except:
+			item = frappe.get_doc({'doctype': 'Item', 'item_code': 'Rod'})
+			item.insert()
+		warehouse = 'Stores'
 		stock = 12
 		difference, doc = get_stock_difference(item, 'Material Issue', stock, warehouse)
 		sle = frappe.db.get_value('Stock Ledger Entry', {'voucher_no': doc.name}, 'name')
@@ -59,9 +67,13 @@ class TestStockEntry(unittest.TestCase):
 		self.assertTrue(sle)
 	
 	def test_transfer_posting(self):
-		item = frappe.get_last_doc('Item')
-		source_warehouse = 'Finished Goods'
-		target_warehouse = 'Stores'
+		try:
+			item = frappe.get_last_doc('Item')
+		except:
+			item = frappe.get_doc({'doctype': 'Item', 'item_code': 'Rod'})
+			item.insert()
+		source_warehouse = 'Stores'
+		target_warehouse = 'Finished Goods'
 		stock = 5
 		initial_stock_balance_source = get_stock_balance(item.item_code, source_warehouse)
 		initial_stock_balance_target = get_stock_balance(item.item_code, target_warehouse)
